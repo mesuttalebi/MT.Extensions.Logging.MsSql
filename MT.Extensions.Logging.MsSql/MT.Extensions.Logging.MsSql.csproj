@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.4</TargetFramework>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Description>Based on Microsoft.Extensions.Logging.Debug for Logging to MsSql Db using Raw Sql and Stored Procedures. for fast logging.</Description>
+    <PackageTags>Logging, MsSql, AspNetCore, Logging Extensions, AspNetCore Elm, Elm Sql</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="1.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="1.1.2" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="1.1.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.3.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.AspNetCore.Http">
+      <HintPath>C:\Users\mesut.talebi\.nuget\packages\microsoft.aspnetcore.http\1.1.2\lib\netstandard1.3\Microsoft.AspNetCore.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Thread">
+      <HintPath>C:\Users\mesut.talebi\.nuget\packages\system.threading.thread\4.3.0\ref\netstandard1.3\System.Threading.Thread.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

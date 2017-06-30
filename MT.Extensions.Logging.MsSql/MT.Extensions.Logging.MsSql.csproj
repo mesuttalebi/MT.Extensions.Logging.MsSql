@@ -3,8 +3,11 @@
   <PropertyGroup>
     <TargetFramework>netstandard1.4</TargetFramework>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Description>Based on Microsoft.Extensions.Logging.Debug for Logging to MsSql Db using Raw Sql and Stored Procedures. for fast logging.</Description>
+    <Description>Based on Microsoft.Extensions.Logging.Debug for Logging to MsSql Db using Raw Sql and Stored Procedures. for fast logging. Elmah for Asp.net Core</Description>
     <PackageTags>Logging, MsSql, AspNetCore, Logging Extensions, AspNetCore Elm, Elm Sql</PackageTags>
+    <Authors>Mesut Talebi</Authors>
+    <Company>Mesut Talebi</Company>
+    <PackageProjectUrl>https://github.com/mesuttalebi/MT.Extensions.Logging.MsSql</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>

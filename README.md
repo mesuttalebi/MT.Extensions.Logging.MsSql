@@ -117,7 +117,7 @@ public void ConfigureServices(IServiceCollection services)
   // Add framework services.
 
   // Add This Line To access HttpContext from within the MsSqlLogger
-  services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+  services.AddSingleton<<IHttpContextAccessor, HttpContextAccessor>>();
   services.AddMvc();
 }
 </pre>

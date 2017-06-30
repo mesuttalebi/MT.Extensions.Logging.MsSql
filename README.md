@@ -161,10 +161,11 @@ public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerF
 
 To Use in Asp.Net Web Application targetting .NetFramework you should also add following nuget packages manually to your project.
 
-- System.Security.Claims (4.3) from 
+- **System.Security.Claims (4.3)** from 
 <a href='https://www.nuget.org/packages/System.Security.Claims/'>NUGET</a>
 
-
+- **System.Diagnostics.StackTrace (4.3)** from 
+<a href='https://www.nuget.org/packages/System.Diagnostics.StackTrace'>NUGET</a>
 
 
 

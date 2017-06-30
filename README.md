@@ -20,7 +20,8 @@ The Default LogLevel for this Extension is Error, (if not specified).
       "Default": "Warning"
     }
   }
-}```
+}
+```
 
 2- Execute CreateScript.sql file in database
 
@@ -80,13 +81,13 @@ AS
             [Category],            
             [Type],
             [Source],
-			[FileName],
+	    [FileName],
             [Message],
             [User],
             [ExceptionDetail],
             [StatusCode],
             [TimeUtc],
-			[StackTrace]
+	    [StackTrace]
         )
     VALUES
         (
@@ -94,13 +95,13 @@ AS
             @Category,            
             @Type,
             @Source,
-			@FileName,
+	    @FileName,
             @Message,
             @User,
             @ExceptionDetail,
             @StatusCode,
             @TimeUtc,
-			@StackTrace
+            @StackTrace
         )
 GO
 

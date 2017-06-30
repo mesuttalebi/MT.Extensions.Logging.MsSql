@@ -9,7 +9,8 @@ The Default LogLevel for this Extension is Error, (if not specified).
 
 1- Before using this tool, Create a Database, and add Connection string into appsetting.json like below.
 
-<pre>{
+```json
+{
   "ConnectionStrings": {
     "LoggerConnection" : "Server=(localdb)\\MSSQLLocalDB;Database=Logs;Trusted_Connection=True;MultipleActiveResultSets=true"
   },
@@ -19,11 +20,11 @@ The Default LogLevel for this Extension is Error, (if not specified).
       "Default": "Warning"
     }
   }
-}</pre>
+}```
 
 2- Execute CreateScript.sql file in database
 
-<pre>
+```sql
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -106,24 +107,24 @@ GO
 /****** Object:  Default [DF_Logs_LogId] ******/
 ALTER TABLE [dbo].[Logs] ADD  CONSTRAINT [DF_Logs_LogId]  DEFAULT (newid()) FOR [LogId]
 GO
-</pre>
+```
 
 
 3- in Asp.net Core Web Application in startup.cs add following codes:
 3-1- 
-<pre>
+```csharp
 public void ConfigureServices(IServiceCollection services)
 {
   // Add framework services.
 
   // Add This Line To access HttpContext from within the MsSqlLogger
-  services.AddSingleton<<IHttpContextAccessor, HttpContextAccessor>>();
+  services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
   services.AddMvc();
 }
-</pre>
+```
 
 3-2-
-<pre>
+```csharp
 public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory,
             IHttpContextAccessor httpContextAccessor)
         {
@@ -153,14 +154,14 @@ public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerF
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
         }
-</pre>
+```
      
 # Using in Asp.net Core Web Application Targetting .NetFramework
 
 To Use in Asp.Net Web Application targetting .NetFramework you should also add following nuget packages manually to your project.
 
 - System.Security.Claims (4.3) from 
-<a href='https://www.nuget.org/packages/System.Security.Claims/'>System.Security.Claims</a>
+<a href='https://www.nuget.org/packages/System.Security.Claims/'>NUGET</a>
 
 
 

@@ -24,7 +24,7 @@ The Default LogLevel for this Extension is Error, (if not specified).
 2- Execute CreateScript.sql file in database
 
 <pre>
-ET ANSI_NULLS ON
+SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
@@ -33,11 +33,13 @@ CREATE TABLE [dbo].[Logs](
 	[Category] [nvarchar](60) NOT NULL,
 	[Type] [nvarchar](100) NOT NULL,
 	[Source] [nvarchar](60) NOT NULL,
+	[FileName] [nvarchar] (400) NOT NULL,
 	[Message] [nvarchar](500) NOT NULL,
 	[User] [nvarchar](50) NOT NULL,
 	[StatusCode] [int] NOT NULL,
 	[TimeUtc] [datetime] NOT NULL,
 	[Sequence] [int] IDENTITY(1,1) NOT NULL,
+	[StackTrace] [nvarchar] (4000) NOT NULL,
 	[ExceptionDetail] [ntext] NOT NULL,
  CONSTRAINT [PK_Log_ID] PRIMARY KEY NONCLUSTERED 
 (
@@ -45,13 +47,7 @@ CREATE TABLE [dbo].[Logs](
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-CREATE NONCLUSTERED INDEX [IX_Log_Id_App_Time_Seq] ON [dbo].[Logs] 
-(
-	[Category] ASC,
-	[TimeUtc] DESC,
-	[Sequence] DESC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-GO
+
 /****** Object:  StoredProcedure [dbo].[spInsertLog]  ******/
 SET ANSI_NULLS ON
 GO
@@ -63,11 +59,13 @@ CREATE PROCEDURE [dbo].[spInsertLog]
     @Category NVARCHAR(60),
     @Type NVARCHAR(100),
     @Source NVARCHAR(60),
+	@FileName NVARCHAR(400),
     @Message NVARCHAR(500),
     @User NVARCHAR(50),
     @ExceptionDetail NTEXT,
     @StatusCode INT,
-    @TimeUtc DATETIME
+    @TimeUtc DATETIME,
+	@StackTrace NVARCHAR(4000)
 )
 AS
 
@@ -81,11 +79,13 @@ AS
             [Category],            
             [Type],
             [Source],
+			[FileName],
             [Message],
             [User],
             [ExceptionDetail],
             [StatusCode],
-            [TimeUtc]
+            [TimeUtc],
+			[StackTrace]
         )
     VALUES
         (
@@ -93,11 +93,13 @@ AS
             @Category,            
             @Type,
             @Source,
+			@FileName,
             @Message,
             @User,
             @ExceptionDetail,
             @StatusCode,
-            @TimeUtc
+            @TimeUtc,
+			@StackTrace
         )
 GO
 
@@ -153,9 +155,12 @@ public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerF
         }
 </pre>
      
+# Using in Asp.net Core Web Application Targetting .NetFramework
 
+To Use in Asp.Net Web Application targetting .NetFramework you should also add following nuget packages manually to your project.
 
-
+- System.Security.Claims (4.3) from 
+<a href='https://www.nuget.org/packages/System.Security.Claims/'>System.Security.Claims</a>
 
 
 

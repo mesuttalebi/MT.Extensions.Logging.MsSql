@@ -5,6 +5,8 @@
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using System;
+using System.Diagnostics;
+using System.Linq;
 
 namespace MT.Extensions.Logging.MsSql.Model
 {
@@ -16,9 +18,11 @@ namespace MT.Extensions.Logging.MsSql.Model
         private string _category;
         private string _typeName;
         private string _source;
+        private string _fileName;
         private string _message;
         private string _detail;
-        private string _user;        
+        private string _user;
+        private string _stackTrace;
 
         /// <summary>
         /// Gets or sets the name of application in which this log occurred.
@@ -45,6 +49,15 @@ namespace MT.Extensions.Logging.MsSql.Model
         {
             get { return _source ?? string.Empty; }
             set { _source = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the filename that the exception thrown.
+        /// </summary>
+        public string FileName
+        {
+            get { return _fileName ?? string.Empty; }
+            set { _fileName = value; }
         }
 
         /// <summary>
@@ -76,6 +89,12 @@ namespace MT.Extensions.Logging.MsSql.Model
             set { _user = value; }
         }
 
+        public string StackTrace
+        {
+            get { return _stackTrace ?? string.Empty; }
+            set { _stackTrace = value; }
+        }
+
         /// <summary>
         /// Gets or sets the date and time (in local time) at which the 
         /// log occurred.
@@ -90,7 +109,7 @@ namespace MT.Extensions.Logging.MsSql.Model
         /// For cases where this value cannot always be reliably determined, 
         /// the value may be reported as zero.
         /// </remarks>
-        public int StatusCode { get; set; }
+        public int StatusCode { get; set; } = 500;
        
         /// <summary>
         /// Gets a collection representing the Header Collection
@@ -116,10 +135,8 @@ namespace MT.Extensions.Logging.MsSql.Model
         /// </summary>
         public IRequestCookieCollection Cookies { get; }
 
-        [JsonIgnore]
-        public Exception Exception { get; }
-
-        public string ExceptionString => Exception.ToString();
+        //[JsonIgnore]
+        //public Exception Exception { get; }      
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Log"/> class
@@ -132,8 +149,6 @@ namespace MT.Extensions.Logging.MsSql.Model
             if (e == null)
                 throw new ArgumentNullException(nameof(e));
 
-            Exception = e;
-
             var baseException = e.GetBaseException();
             
             // Load the basic information.                      
@@ -143,13 +158,22 @@ namespace MT.Extensions.Logging.MsSql.Model
             _detail = e.ToString();            
             Time = DateTime.UtcNow;
 
+            _stackTrace = baseException.StackTrace;
+            StackTrace st = new StackTrace(baseException, true);
+            StackFrame frame = st.GetFrames().First();
+            var exMethodName = frame.GetMethod().Name;
+            var exFileLineNumber = frame.GetFileLineNumber().ToString();
+
+            _fileName = frame.GetFileName() + $"(MethodName: {exMethodName}, LineNumber: {exFileLineNumber})";
+
+
             // If this is an HTTP exception, then get the status code               
-            StatusCode = context?.Response.StatusCode ?? 0;
-                        
+            //StatusCode = context?.Response.StatusCode ?? 0;
+
             // If the HTTP context is available, then capture the
             // collections that represent the state request as well as
             // the user.            
-            if(context != null)
+            if (context != null)
             {
                 var webUser = context.User;
                 if (webUser != null 

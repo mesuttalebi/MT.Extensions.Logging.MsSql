@@ -1,8 +1,8 @@
 // Copyright (c) Mesut Talebi (mesut.talebi@gmail.com)
 
+using System;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using System;
 
 namespace MT.Extensions.Logging.MsSql
 {
@@ -73,7 +73,7 @@ namespace MT.Extensions.Logging.MsSql
 
             var message = formatter(state, exception);
 
-            if (string.IsNullOrEmpty(message))
+            if (logLevel < LogLevel.Error && string.IsNullOrEmpty(message))
             {
                 return;
             }

@@ -2,11 +2,11 @@
 // Not: This File is based on Elmah library's log.cs file.
 
 
-using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 
 namespace MT.Extensions.Logging.MsSql.Model
 {
@@ -160,12 +160,15 @@ namespace MT.Extensions.Logging.MsSql.Model
 
             _stackTrace = baseException.StackTrace;
             StackTrace st = new StackTrace(baseException, true);
-            StackFrame frame = st.GetFrames().First();
-            var exMethodName = frame.GetMethod().Name;
-            var exFileLineNumber = frame.GetFileLineNumber().ToString();
+            var frames = st.GetFrames();
+            if (frames != null)
+            {
+                StackFrame frame = frames.First();
+                var exMethodName = frame.GetMethod().Name;
+                var exFileLineNumber = frame.GetFileLineNumber().ToString();
 
-            _fileName = frame.GetFileName() + $"(MethodName: {exMethodName}, LineNumber: {exFileLineNumber})";
-
+                _fileName = frame.GetFileName() + $"(MethodName: {exMethodName}, LineNumber: {exFileLineNumber})";
+            }
 
             // If this is an HTTP exception, then get the status code               
             //StatusCode = context?.Response.StatusCode ?? 0;

@@ -80,7 +80,7 @@ namespace MT.Extensions.Logging.MsSql
 
             message = $"{ logLevel }: {message}";
             
-            SqlSaveLog(logLevel,message, _name, exception, _context.HttpContext);
+            SqlSaveLog(logLevel,message, _name, exception, _context?.HttpContext);
         }
 
         private class NoopDisposable : IDisposable

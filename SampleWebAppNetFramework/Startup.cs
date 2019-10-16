@@ -30,7 +30,10 @@ namespace SampleWebAppNetFramework
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
-            loggerFactory.AddMsSql(Configuration.GetConnectionString("LoggerConnection"), httpContextAccessor);
+            //loggerFactory.AddMsSql(Configuration.GetConnectionString("LoggerConnection"), httpContextAccessor);
+            
+            loggerFactory.AddProvider(new MsSqlLoggerProvider((_, LogLevel) => LogLevel >= LogLevel.Trace,
+                Configuration.GetConnectionString("LoggerConnection"), null,"SampleAppNetFramework"));
 
             if (env.IsDevelopment())
             {

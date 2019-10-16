@@ -33,7 +33,7 @@ namespace SampleWebApp
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
-            loggerFactory.AddMsSql(Configuration.GetConnectionString("LoggerConnection"), httpContextAccessor);
+            loggerFactory.AddMsSql(Configuration.GetConnectionString("LoggerConnection"), httpContextAccessor, "MyTestApp");
 
             
             if (env.IsDevelopment())

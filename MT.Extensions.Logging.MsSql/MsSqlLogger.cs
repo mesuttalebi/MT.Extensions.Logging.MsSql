@@ -15,16 +15,18 @@ namespace MT.Extensions.Logging.MsSql
         private readonly string _name;
         private readonly string _connectionString;
         private readonly IHttpContextAccessor _context;
-
+        private readonly string _application;
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="MsSqlLogger"/> class.
         /// </summary>
         /// <param name="name">The name of the logger.</param>
         /// <param name="connectionString">The connection string to MsSql Db to Log into</param>
         /// <param name="httpContext">Context to get Http Info</param>
-        public MsSqlLogger(string name, string connectionString, IHttpContextAccessor httpContext)
-            : this(name, filter: null, connectionString: connectionString, httpContext: httpContext)
-        {
+        /// <param name="application">the name of the application that logs, used if Many applications logs to same database</param>
+        public MsSqlLogger(string name, string connectionString, IHttpContextAccessor httpContext, string application)
+            : this(name, filter: null, connectionString: connectionString, httpContext: httpContext, application: application)
+        {            
         }
 
         /// <summary>
@@ -34,12 +36,13 @@ namespace MT.Extensions.Logging.MsSql
         /// <param name="filter">The function used to filter events based on the log level.</param>
         /// <param name="connectionString">The connection string to MsSql Db to Log into</param>
         /// <param name="httpContext">Context to get Http Info</param>
-        public MsSqlLogger(string name, Func<string, LogLevel, bool> filter, string connectionString, IHttpContextAccessor httpContext)
+        public MsSqlLogger(string name, Func<string, LogLevel, bool> filter, string connectionString, IHttpContextAccessor httpContext, string application)
         {
             _name = string.IsNullOrEmpty(name) ? nameof(MsSqlLogger) : name;
             _filter = filter;
             _connectionString = connectionString;
             _context = httpContext;
+            _application = application;
         }
 
 
@@ -80,7 +83,7 @@ namespace MT.Extensions.Logging.MsSql
 
             message = $"{ logLevel }: {message}";
             
-            SqlSaveLog(logLevel,message, _name, exception, _context?.HttpContext);
+            SqlSaveLog(logLevel,message, _name, exception, _context?.HttpContext, _application);
         }
 
         private class NoopDisposable : IDisposable

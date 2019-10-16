@@ -8,9 +8,11 @@
     <Authors>Mesut Talebi</Authors>
     <Company>Mesut Talebi</Company>
     <PackageProjectUrl>https://github.com/mesuttalebi/MT.Extensions.Logging.MsSql</PackageProjectUrl>
-    <Version>2.0.1</Version>
-    <PackageReleaseNotes>Updated To .NetCore 2.0 and .NetStandard 2.0</PackageReleaseNotes>
-    <AssemblyVersion>2.0.1.0</AssemblyVersion>
+    <Version>2.1.0</Version>
+    <PackageReleaseNotes>Added ApplicationName column and removed Sequence (useless), The Application name can be used to specify witch application is logging, and usefull when multiple application uses the same database. also some columns order changed, TimeUtc moved to first column because everyone wnat to get last data in sql management studio, uses Order by 1 desc and it would be solved unordered list of logs :)
+Added an update script to update from previous database scheme to current.</PackageReleaseNotes>
+    <AssemblyVersion>2.1.0.0</AssemblyVersion>
+    <PackageLicenseFile>licence.txt</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,6 +25,11 @@
     <PackageReference Include="System.Security.Claims" Version="4.3.0" />
   </ItemGroup>
 
-  <ItemGroup>       
-  </ItemGroup>  
+  <ItemGroup>
+    <None Include="licence.txt">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
 </Project>

@@ -11,7 +11,7 @@ namespace MT.Extensions.Logging.MsSql
 {
     public partial class MsSqlLogger
     {
-        private void SqlSaveLog(LogLevel logLevel, string message, string category, Exception ex, HttpContext context)
+        private void SqlSaveLog(LogLevel logLevel, string message, string category, Exception ex, HttpContext context, string application)
         {
 
             using (var conn = new SqlConnection(_connectionString))
@@ -20,11 +20,11 @@ namespace MT.Extensions.Logging.MsSql
 
                 if (ex == null)
                 {
-                    cmd = GetSqlCommandFromMessage(logLevel, message, category, context);                    
+                    cmd = GetSqlCommandFromMessage(logLevel, message, category, context, application);                    
                 }
                 else
                 {
-                    cmd = GetSqlCommandFromError(new Log(ex, context) {Category = category});                    
+                    cmd = GetSqlCommandFromError(new Log(ex, context) {Category = category, Message = message, Application = application});                    
                 }
 
                 using (cmd)
@@ -38,7 +38,7 @@ namespace MT.Extensions.Logging.MsSql
             }            
         }
 
-        private SqlCommand GetSqlCommandFromMessage(LogLevel logLevel, string message, string category, HttpContext context)
+        private SqlCommand GetSqlCommandFromMessage(LogLevel logLevel, string message, string category, HttpContext context, string application)
         {
             var id = Guid.NewGuid();
 
@@ -60,6 +60,7 @@ namespace MT.Extensions.Logging.MsSql
             parameters.Add("@StatusCode", SqlDbType.Int).Value = context?.Response.StatusCode ?? 0;
             parameters.Add("@TimeUtc", SqlDbType.DateTime).Value = DateTime.UtcNow;
             parameters.Add("@StackTrace", SqlDbType.NVarChar, 4000).Value = string.Empty;
+            parameters.Add("@Application", SqlDbType.NVarChar, 100).Value = application;            
 
             return command;
         }
@@ -88,6 +89,7 @@ namespace MT.Extensions.Logging.MsSql
             parameters.Add("@StatusCode", SqlDbType.Int).Value = error.StatusCode;
             parameters.Add("@TimeUtc", SqlDbType.DateTime).Value = error.Time;
             parameters.Add("@StackTrace", SqlDbType.NVarChar, 4000).Value = error.StackTrace;
+            parameters.Add("@Application", SqlDbType.NVarChar, 100).Value = error.Application;
 
             return command;
         }

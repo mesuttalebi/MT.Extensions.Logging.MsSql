@@ -3,7 +3,9 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Logs](
+	[TimeUtc] [datetime] NOT NULL,	
 	[LogId] [uniqueidentifier] NOT NULL,
+	[Application] [nvarchar](100) NULL,
 	[Category] [nvarchar](60) NOT NULL,
 	[Type] [nvarchar](100) NOT NULL,
 	[Source] [nvarchar](60) NOT NULL,
@@ -11,8 +13,6 @@ CREATE TABLE [dbo].[Logs](
 	[Message] [nvarchar](500) NOT NULL,
 	[User] [nvarchar](50) NOT NULL,
 	[StatusCode] [int] NOT NULL,
-	[TimeUtc] [datetime] NOT NULL,
-	[Sequence] [int] IDENTITY(1,1) NOT NULL,
 	[StackTrace] [nvarchar] (4000) NOT NULL,
 	[ExceptionDetail] [ntext] NOT NULL,
  CONSTRAINT [PK_Log_ID] PRIMARY KEY NONCLUSTERED 
@@ -29,7 +29,9 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[spInsertLog]
 (
+    @TimeUtc DATETIME,
     @LogId UNIQUEIDENTIFIER,
+	@Application NVARCHAR(100) = null,
     @Category NVARCHAR(60),
     @Type NVARCHAR(100),
     @Source NVARCHAR(60),
@@ -38,7 +40,6 @@ CREATE PROCEDURE [dbo].[spInsertLog]
     @User NVARCHAR(50),
     @ExceptionDetail NTEXT,
     @StatusCode INT,
-    @TimeUtc DATETIME,
 	@StackTrace NVARCHAR(4000)
 )
 AS
@@ -49,7 +50,9 @@ AS
     INTO
         [dbo].[Logs]
         (
+            [TimeUtc],
             [LogId],
+			[Application],
             [Category],            
             [Type],
             [Source],
@@ -58,12 +61,13 @@ AS
             [User],
             [ExceptionDetail],
             [StatusCode],
-            [TimeUtc],
 			[StackTrace]
         )
     VALUES
         (
+            @TimeUtc,
             @LogId,
+			@Application,
             @Category,            
             @Type,
             @Source,
@@ -72,7 +76,6 @@ AS
             @User,
             @ExceptionDetail,
             @StatusCode,
-            @TimeUtc,
 			@StackTrace
         )
 GO

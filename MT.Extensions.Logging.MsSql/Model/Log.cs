@@ -15,6 +15,7 @@ namespace MT.Extensions.Logging.MsSql.Model
     /// </summary>
     public sealed class Log 
     {
+        private string _application;
         private string _category;
         private string _typeName;
         private string _source;
@@ -23,6 +24,15 @@ namespace MT.Extensions.Logging.MsSql.Model
         private string _detail;
         private string _user;
         private string _stackTrace;
+
+        /// <summary>
+        /// Gets or sets the name of application in which this log occurred.
+        /// </summary>   
+        public string Application
+        {
+            get { return _application ?? string.Empty; }
+            set { _application = value; }
+        }
 
         /// <summary>
         /// Gets or sets the name of application in which this log occurred.
@@ -153,7 +163,7 @@ namespace MT.Extensions.Logging.MsSql.Model
             
             // Load the basic information.                      
             _typeName = baseException.GetType().FullName;
-            _message = baseException.Message;
+            _message = string.IsNullOrEmpty(this.Message) ?  baseException.Message : this.Message;
             _source = baseException.Source;
             _detail = e.ToString();            
             Time = DateTime.UtcNow;

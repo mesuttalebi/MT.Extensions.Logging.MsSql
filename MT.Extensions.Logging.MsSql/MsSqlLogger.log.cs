@@ -24,7 +24,7 @@ namespace MT.Extensions.Logging.MsSql
                 }
                 else
                 {
-                    cmd = GetSqlCommandFromError(new Log(ex, context) {Category = category, Message = message, Application = application});                    
+                    cmd = GetSqlCommandFromError(new Log(ex, context) {Category = category, Application = application}, message);                    
                 }
 
                 using (cmd)
@@ -66,7 +66,7 @@ namespace MT.Extensions.Logging.MsSql
         }
 
 
-        private static SqlCommand GetSqlCommandFromError(Log error)
+        private static SqlCommand GetSqlCommandFromError(Log error, string message)
         {
             var errorJson = error.Serialize();
             var id = Guid.NewGuid();
@@ -83,7 +83,7 @@ namespace MT.Extensions.Logging.MsSql
             parameters.Add("@Type", SqlDbType.NVarChar, 100).Value = error.Type;
             parameters.Add("@Source", SqlDbType.NVarChar, 60).Value = error.Source;
             parameters.Add("@FileName", SqlDbType.NVarChar, 400).Value = error.FileName;
-            parameters.Add("@Message", SqlDbType.NVarChar, 500).Value = error.Message;
+            parameters.Add("@Message", SqlDbType.NVarChar, 500).Value = (string.IsNullOrEmpty(message) ? "" : message + " - ") +error.Message;
             parameters.Add("@User", SqlDbType.NVarChar, 50).Value = error.User;
             parameters.Add("@ExceptionDetail", SqlDbType.NVarChar, -1).Value = errorJson;
             parameters.Add("@StatusCode", SqlDbType.Int).Value = error.StatusCode;

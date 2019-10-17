@@ -163,7 +163,7 @@ namespace MT.Extensions.Logging.MsSql.Model
             
             // Load the basic information.                      
             _typeName = baseException.GetType().FullName;
-            _message = string.IsNullOrEmpty(this.Message) ?  baseException.Message : this.Message;
+            _message = baseException.Message;
             _source = baseException.Source;
             _detail = e.ToString();            
             Time = DateTime.UtcNow;

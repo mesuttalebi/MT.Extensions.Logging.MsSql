@@ -81,7 +81,7 @@ namespace MT.Extensions.Logging.MsSql
                 return;
             }
 
-            message = $"{ logLevel }: {message}";
+            message = !string.IsNullOrEmpty(message) ?  $"{ logLevel }: {message}" : string.Empty;
             
             SqlSaveLog(logLevel,message, _name, exception, _context?.HttpContext, _application);
         }

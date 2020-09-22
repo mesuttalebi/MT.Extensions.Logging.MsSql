@@ -8,12 +8,12 @@
     <Authors>Mesut Talebi</Authors>
     <Company>Mesut Talebi</Company>
     <PackageProjectUrl>https://github.com/mesuttalebi/MT.Extensions.Logging.MsSql</PackageProjectUrl>
-    <Version>2.1.1</Version>
-    <PackageReleaseNotes>an error with not saving extra message fixed.
+    <Version>2.2.0</Version>
+    <PackageReleaseNotes>Added new RequestId column, to save TraceIdentifer of current request. 
+Used HttpContext.Items["ExceptionLogId"] to return currently saved exception logs. Not: this value will be set for LogError only.
 
-Added ApplicationName column and removed Sequence (useless), The Application name can be used to specify witch application is logging, and usefull when multiple application uses the same database. also some columns order changed, TimeUtc moved to first column because everyone wnat to get last data in sql management studio, uses Order by 1 desc and it would be solved unordered list of logs :)
 Added an update script to update from previous database scheme to current.</PackageReleaseNotes>
-    <AssemblyVersion>2.1.1.0</AssemblyVersion>
+    <AssemblyVersion>2.2.0.0</AssemblyVersion>
     <PackageLicenseFile>licence.txt</PackageLicenseFile>
   </PropertyGroup>
 

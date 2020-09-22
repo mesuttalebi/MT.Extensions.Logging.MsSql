@@ -46,6 +46,7 @@ CREATE TABLE dbo.Tmp_Logs
 	(
 	TimeUtc datetime NOT NULL,
 	LogId uniqueidentifier NOT NULL,
+	RequestId nvarchar(60) NULL,
 	Application nvarchar(100) NULL,
 	Category nvarchar(60) NOT NULL,
 	Type nvarchar(100) NOT NULL,
@@ -65,8 +66,8 @@ ALTER TABLE dbo.Tmp_Logs ADD CONSTRAINT
 	DF_Logs_LogId DEFAULT (newid()) FOR LogId
 GO
 IF EXISTS(SELECT * FROM dbo.Logs)
-	 EXEC('INSERT INTO dbo.Tmp_Logs (TimeUtc, LogId, Category, Type, Source, FileName, Message, [User], StatusCode, StackTrace, ExceptionDetail)
-		SELECT TimeUtc, LogId, Category, Type, Source, FileName, Message, [User], StatusCode, StackTrace, ExceptionDetail FROM dbo.Logs WITH (HOLDLOCK TABLOCKX)')
+	 EXEC('INSERT INTO dbo.Tmp_Logs (TimeUtc, LogId, Application, Category, Type, Source, FileName, Message, [User], StatusCode, StackTrace, ExceptionDetail)
+		SELECT TimeUtc, LogId, Application, Category, Type, Source, FileName, Message, [User], StatusCode, StackTrace, ExceptionDetail FROM dbo.Logs WITH (HOLDLOCK TABLOCKX)')
 GO
 DROP TABLE dbo.Logs
 GO
@@ -79,28 +80,24 @@ ALTER TABLE dbo.Logs ADD CONSTRAINT
 	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 
 GO
-CREATE NONCLUSTERED INDEX IX_TimeUTC ON dbo.Logs
-	(
-	TimeUtc DESC
-	) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-GO
 COMMIT
-GO
 
+Go
 ALTER PROCEDURE [dbo].[spInsertLog]
 (
     @TimeUtc DATETIME,
     @LogId UNIQUEIDENTIFIER,
-	@Application NVARCHAR(100) = null,
+    @RequestId NVARCHAR(60) = null,
+    @Application NVARCHAR(100) = null,
     @Category NVARCHAR(60),
     @Type NVARCHAR(100),
     @Source NVARCHAR(60),
-	@FileName NVARCHAR(400),
+    @FileName NVARCHAR(400),
     @Message NVARCHAR(500),
     @User NVARCHAR(50),
     @ExceptionDetail NTEXT,
     @StatusCode INT,
-	@StackTrace NVARCHAR(4000)
+    @StackTrace NVARCHAR(4000)
 )
 AS
 
@@ -112,33 +109,34 @@ AS
         (
             [TimeUtc],
             [LogId],
-			[Application],
+            [RequestId],
+            [Application],
             [Category],            
             [Type],
             [Source],
-			[FileName],
+            [FileName],
             [Message],
             [User],
             [ExceptionDetail],
             [StatusCode],
-			[StackTrace]
+            [StackTrace]
         )
     VALUES
         (
             @TimeUtc,
             @LogId,
-			@Application,
+            @RequestId,
+            @Application,
             @Category,            
             @Type,
             @Source,
-			@FileName,
+            @FileName,
             @Message,
             @User,
             @ExceptionDetail,
             @StatusCode,
-			@StackTrace
+            @StackTrace
         )
-GO
 
 ```
 ## Create Script
@@ -152,6 +150,7 @@ GO
 CREATE TABLE [dbo].[Logs](
 	[TimeUtc] [datetime] NOT NULL,	
 	[LogId] [uniqueidentifier] NOT NULL,
+    [RequestId] [navrchar](60) NULL,
 	[Application] [nvarchar](100) NULL,
 	[Category] [nvarchar](60) NOT NULL,
 	[Type] [nvarchar](100) NOT NULL,
@@ -178,16 +177,17 @@ CREATE PROCEDURE [dbo].[spInsertLog]
 (
     @TimeUtc DATETIME,
     @LogId UNIQUEIDENTIFIER,
-	@Application NVARCHAR(100) = null,
+    @RequestId NVARCHAR(60) = null,
+    @Application NVARCHAR(100) = null,
     @Category NVARCHAR(60),
     @Type NVARCHAR(100),
     @Source NVARCHAR(60),
-	@FileName NVARCHAR(400),
+    @FileName NVARCHAR(400),
     @Message NVARCHAR(500),
     @User NVARCHAR(50),
     @ExceptionDetail NTEXT,
     @StatusCode INT,
-	@StackTrace NVARCHAR(4000)
+    @StackTrace NVARCHAR(4000)
 )
 AS
 
@@ -199,31 +199,33 @@ AS
         (
             [TimeUtc],
             [LogId],
-			[Application],
+            [RequestId],
+            [Application],
             [Category],            
             [Type],
             [Source],
-			[FileName],
+            [FileName],
             [Message],
             [User],
             [ExceptionDetail],
             [StatusCode],
-			[StackTrace]
+            [StackTrace]
         )
     VALUES
         (
             @TimeUtc,
             @LogId,
-			@Application,
+            @RequestId,
+            @Application,
             @Category,            
             @Type,
             @Source,
-			@FileName,
+            @FileName,
             @Message,
             @User,
             @ExceptionDetail,
             @StatusCode,
-			@StackTrace
+            @StackTrace
         )
 GO
 
@@ -234,13 +236,14 @@ GO
  
 
 3- in Asp.net Core Web Application in startup.cs add following codes:
+
 3-1- 
 ```csharp
 public void ConfigureServices(IServiceCollection services)
 {
   // Add framework services.
 
-  // Add This Line To access HttpContext from within the MsSqlLogger to get the user name that gets error
+  // Add This Line To access HttpContext from within the MsSqlLogger to get the user name, trace Identifier that gets error also for returning back logId inside httpContext.
   services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
   services.AddMvc();
 }
@@ -259,7 +262,7 @@ public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerF
 
 	// Also you can add as Provider as below:
 	//loggerFactory.AddProvider(new MsSqlLoggerProvider((_, LogLevel) => LogLevel >= LogLevel.Trace,
-    //     Configuration.GetConnectionString("LoggerConnection"), null,"SampleApplication"));            
+        //     Configuration.GetConnectionString("LoggerConnection"), null,"SampleApplication"));            
 
     if (env.IsDevelopment())
     {

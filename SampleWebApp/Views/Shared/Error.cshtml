@@ -1,9 +1,14 @@
-﻿@{
+﻿@model ValueTuple<string, string>
+
+@{
     ViewData["Title"] = "Error";
 }
 
 <h1 class="text-danger">Error.</h1>
-<h2 class="text-danger">An error occurred while processing your request.</h2>
+<h2 class="text-danger">An error occurred while processing your request.
+    <br/> RequestId: @Model.Item1
+    <br/> LogId: @Model.Item2
+</h2>
 
 <h3>Development Mode</h3>
 <p>

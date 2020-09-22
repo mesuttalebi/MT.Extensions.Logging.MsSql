@@ -145,6 +145,11 @@ namespace MT.Extensions.Logging.MsSql.Model
         /// </summary>
         public IRequestCookieCollection Cookies { get; }
 
+        /// <summary>
+        /// The unique Identifer of the current request.
+        /// </summary>
+        public string RequestId { get; set; }
+
         //[JsonIgnore]
         //public Exception Exception { get; }      
 
@@ -204,9 +209,10 @@ namespace MT.Extensions.Logging.MsSql.Model
                     //ignore 
                 }                
                 Cookies = request.Cookies;
+                RequestId = context.TraceIdentifier;
             }
-        }              
-        
+        }
+
         /// <summary>
         /// Returns the value of the <see cref="Message"/> property.
         /// </summary>

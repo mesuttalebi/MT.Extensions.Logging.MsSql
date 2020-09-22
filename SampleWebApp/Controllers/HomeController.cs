@@ -17,7 +17,9 @@ namespace SampleWebApp.Controllers
         {
             try
             {
-                throw new Exception("this is an example error!");
+                var x = 0;
+                var y = 3;
+                var z = y / x;
             }
             catch (Exception ex)
             {
@@ -43,7 +45,13 @@ namespace SampleWebApp.Controllers
 
         public IActionResult Error()
         {
-            return View();
+            var identifier = HttpContext.TraceIdentifier;
+
+            // try get logId
+            HttpContext.Items.TryGetValue("ExceptionLogId", out object logId);
+            
+
+            return View("Error", (identifier, logId?.ToString()));
         }
     }
 }

@@ -24,7 +24,13 @@ namespace MT.Extensions.Logging.MsSql
                 }
                 else
                 {
-                    cmd = GetSqlCommandFromError(new Log(ex, context) {Category = category, Application = application}, message);                    
+                    cmd = GetSqlCommandFromError(new Log(ex, context) {Category = category, Application = application}, message, out string logId);
+                    
+                    if (context.Items.ContainsKey("ExceptionLogId"))
+                        context.Items["ExceptionLogId"] = logId;
+                    else
+                        context.Items.Add("ExceptionLogId", logId);
+
                 }
 
                 using (cmd)
@@ -34,6 +40,7 @@ namespace MT.Extensions.Logging.MsSql
                     var task = cmd.ExecuteNonQueryAsync();
                     task.Wait();
                 }
+
                 
             }            
         }
@@ -65,12 +72,12 @@ namespace MT.Extensions.Logging.MsSql
             return command;
         }
 
-
-        private static SqlCommand GetSqlCommandFromError(Log error, string message)
+        private static SqlCommand GetSqlCommandFromError(Log error, string message, out string logId)
         {
             var errorJson = error.Serialize();
             var id = Guid.NewGuid();
-            
+            logId = id.ToString();
+
             var command = new SqlCommand("spInsertLog")
             {
                 CommandType = CommandType.StoredProcedure
@@ -90,6 +97,7 @@ namespace MT.Extensions.Logging.MsSql
             parameters.Add("@TimeUtc", SqlDbType.DateTime).Value = error.Time;
             parameters.Add("@StackTrace", SqlDbType.NVarChar, 4000).Value = error.StackTrace;
             parameters.Add("@Application", SqlDbType.NVarChar, 100).Value = error.Application;
+            parameters.Add("@RequestId", SqlDbType.NVarChar).Value = error.RequestId;
 
             return command;
         }

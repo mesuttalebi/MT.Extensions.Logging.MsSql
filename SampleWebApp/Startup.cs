@@ -30,23 +30,18 @@ namespace SampleWebApp
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory,
             IHttpContextAccessor httpContextAccessor)
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
-
             loggerFactory.AddMsSql(Configuration.GetConnectionString("LoggerConnection"), httpContextAccessor, "MyTestApp");
 
-            
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                //app.UseDeveloperExceptionPage();
                 app.UseBrowserLink();
             }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-            }
+            
 
             app.UseStaticFiles();
+
+            app.UseExceptionHandler("/Home/Error");
 
             app.UseMvc(routes =>
             {

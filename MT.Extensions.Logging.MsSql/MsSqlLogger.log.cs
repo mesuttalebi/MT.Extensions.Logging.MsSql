@@ -25,11 +25,14 @@ namespace MT.Extensions.Logging.MsSql
                 else
                 {
                     cmd = GetSqlCommandFromError(new Log(ex, context) {Category = category, Application = application}, message, out string logId);
-                    
-                    if (context.Items.ContainsKey("ExceptionLogId"))
-                        context.Items["ExceptionLogId"] = logId;
-                    else
-                        context.Items.Add("ExceptionLogId", logId);
+
+                    if (context != null)
+                    {
+                        if (context.Items.ContainsKey("ExceptionLogId"))
+                            context.Items["ExceptionLogId"] = logId;
+                        else
+                            context.Items.Add("ExceptionLogId", logId);
+                    }
 
                 }
 

@@ -8,13 +8,12 @@
     <Authors>Mesut Talebi</Authors>
     <Company>Mesut Talebi</Company>
     <PackageProjectUrl>https://github.com/mesuttalebi/MT.Extensions.Logging.MsSql</PackageProjectUrl>
-    <Version>2.2.0</Version>
-    <PackageReleaseNotes>Added new RequestId column, to save TraceIdentifer of current request. 
-Used HttpContext.Items["ExceptionLogId"] to return currently saved exception logs. Not: this value will be set for LogError only.
-
-Added an update script to update from previous database scheme to current.</PackageReleaseNotes>
-    <AssemblyVersion>2.2.0.0</AssemblyVersion>
+    <Version>2.2.1</Version>
+    <PackageReleaseNotes>Added a Null control for when httpContext is null, becouse httpContext is null for console apps.
+</PackageReleaseNotes>
+    <AssemblyVersion>2.2.1.0</AssemblyVersion>
     <PackageLicenseFile>licence.txt</PackageLicenseFile>
+    <FileVersion>2.2.1.2</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

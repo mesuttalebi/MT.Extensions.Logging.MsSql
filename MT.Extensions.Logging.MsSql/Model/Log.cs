@@ -176,7 +176,7 @@ namespace MT.Extensions.Logging.MsSql.Model
             _stackTrace = baseException.StackTrace;
             StackTrace st = new StackTrace(baseException, true);
             var frames = st.GetFrames();
-            if (frames != null)
+            if (frames != null && frames.Any())
             {
                 StackFrame frame = frames.First();
                 var exMethodName = frame.GetMethod().Name;

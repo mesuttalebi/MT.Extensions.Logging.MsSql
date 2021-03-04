@@ -8,12 +8,14 @@
     <Authors>Mesut Talebi</Authors>
     <Company>Mesut Talebi</Company>
     <PackageProjectUrl>https://github.com/mesuttalebi/MT.Extensions.Logging.MsSql</PackageProjectUrl>
-    <Version>2.2.1</Version>
-    <PackageReleaseNotes>Added a Null control for when httpContext is null, becouse httpContext is null for console apps.
+    <Version>2.2.2</Version>
+    <PackageReleaseNotes>bug fixed for Sequence contains no elements when frames is empty.
 </PackageReleaseNotes>
-    <AssemblyVersion>2.2.1.0</AssemblyVersion>
+    <AssemblyVersion>2.2.2.0</AssemblyVersion>
     <PackageLicenseFile>licence.txt</PackageLicenseFile>
-    <FileVersion>2.2.1.2</FileVersion>
+    <FileVersion>2.2.2.0</FileVersion>
+    <RepositoryUrl>https://github.com/mesuttalebi/MT.Extensions.Logging.MsSql</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,5 +1,5 @@
 # MT.Extensions.Logging.MsSql
-An .net Core Logger Extension that logs to MsSql server using stored procedure. (ELMAH for Asp.Net Core)
+A .net Core Logger Extension that logs to MsSql server using stored procedure. (ELMAH for Asp.Net Core)
 
 An Extension of ILogger to log Data into MsSql DB, This is an alternative for ELMAH in asp.net mvc.  currently there is no page to view errors, or error details inside, but anyone can help will be appreciated.
 

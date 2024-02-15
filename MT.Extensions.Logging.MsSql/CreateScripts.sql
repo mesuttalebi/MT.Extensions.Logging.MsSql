@@ -5,7 +5,7 @@ GO
 CREATE TABLE [dbo].[Logs](
 	[TimeUtc] [datetime] NOT NULL,	
 	[LogId] [uniqueidentifier] NOT NULL,
-    [RequestId] [navrchar](60) NULL,
+    [RequestId] [nvarchar](60) NULL,
 	[Application] [nvarchar](100) NULL,
 	[Category] [nvarchar](60) NOT NULL,
 	[Type] [nvarchar](100) NOT NULL,
